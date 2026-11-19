@@ -1,9 +1,8 @@
 # Matcha Data: UI and data-mapping spec
 
-Version **0.3.0** (see `CHANGELOG.md`). This describes the UI on the `recovered-ui` branch. It
-supersedes the description of `app.js` in `SPEC.md` ("What's built"), which covers the older
-hover-an-emoji design. The data pipeline in `SPEC.md` (scraper, X archive converter,
-`data/tweets.json`) is unchanged.
+Version **0.3.0** (see `CHANGELOG.md`). This describes the UI on the `recovered-ui` branch.
+`SPEC.md` covers the goal and the data pipeline (scraper, X archive converter,
+`data/tweets.json`) and points here for the UI.
 
 The UI and logic do not depend on which tweets are loaded. Porting to `main` means copying the
 UI files; the only thing that changes with real data is the content of `data/tweets.json` (plus

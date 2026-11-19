@@ -1,11 +1,17 @@
 # Matcha Data — tweet display pipeline spec
 
+**Version 0.3.0** — see `CHANGELOG.md`. The UI, interactions and the mapping
+from tweets to the page are specified in `UI_SPEC.md`; this file covers the
+goal, the data pipeline and what is left to do.
+
 ## Goal
 
 Show every public tweet from the `matchadata` X/Twitter account on the
-homepage as a hover-to-reveal emoji cloud, with the deployed site having
+homepage — hashtag chips, an emoji card and a tweets card, where clicking an
+emoji shows just its tweet (see `UI_SPEC.md`) — with the deployed site having
 **zero runtime dependencies** — no live API calls, no server. The homepage
-only ever fetches a committed static file, `data/tweets.json`.
+only ever fetches committed static files (`data/tweets.json`, plus
+`data/tags.json` for tag order).
 
 ## Status: parked, waiting on the X data export
 
@@ -14,15 +20,17 @@ side is done and tested; only the real data is missing.
 
 ## What's built
 
-- **`app.js`**: fixed a pre-existing brace-mismatch bug that silently broke
-  the whole script (confirmed present even in the original committed
-  version). Fetches `data/tweets.json` directly (no more
-  `localhost:3000/twitter` server dependency). Tweet text paragraphs are
-  hidden by default; hovering an emoji reveals its matching tweet's text via
-  a shared `data-target`/`id` pair, then hides it again on mouseout — this
-  gives the "emoji-cloud by default, text on hover" behavior that matches
-  the original design intent (and the commented-out hints already in the
-  file: "hover this emoji, show obj[i].text; else hide").
+- **`index.html`, `css/styles.css`, `app.js`** (rewritten in 0.2.0–0.3.0; the
+  earlier hover-an-emoji design and its jQuery code are gone): fixed a
+  pre-existing brace-mismatch bug that silently broke the whole original
+  script. The page fetches `data/tweets.json` directly (no
+  `localhost:3000/twitter` server dependency) and `data/tags.json` for the
+  preferred tag order. Tags are mapped from `entities.hashtags[].text`, and
+  emoji are extracted from the tweet text and drawn as local Twemoji SVGs
+  (`assets/emoji/`, copied by `scripts/vendor_emoji.js`). A tag chip filters
+  the emoji and tweets; `#view-all` shows everything; clicking an emoji shows
+  only that emoji's tweet. Full behavior, layout, styles and the data contract
+  are in `UI_SPEC.md`.
 - **`scrape_x_account.py`**: added `extract_hashtags()`, `to_web_schema()`,
   `write_web_json()`, and a `--web-out` flag (default `data/tweets.json`).
   These convert either scrape mode's output (api or browser) into the
@@ -73,14 +81,26 @@ X typically takes a few hours (up to ~a day) and emails a download link.
 3. Run: `python3 convert_x_archive.py <path-to-archive>/data matchadata`
    — this overwrites `data/tweets.json` with the real, complete tweet
    history.
-4. Verify locally: `python3 -m http.server` in this directory, open
-   `index.html`, confirm the emoji cloud renders and hover-reveal still
-   works at real data volume.
-5. Review the diff, then commit and push (nothing has been pushed to
-   `origin/main` since the initial commit — this work is local-only for
-   now, per request).
+4. Copy the Twemoji files the real tweets use: `node scripts/vendor_emoji.js
+   <dir of Twemoji SVGs>` (the script header says where to get them). It lists
+   any emoji it has no file for.
+5. Review `data/tags.json` (preferred tag order) and `DEFAULT_TAG` in
+   `app.js` against the real hashtags.
+6. Verify locally: `python3 -m http.server` in this directory, open
+   `index.html`, and run the checks in `UI_SPEC.md` (tags filter, `#view-all`
+   shows everything, clicking an emoji shows one tweet, six emoji per row,
+   no 404s in `assets/emoji/`) at real data volume. Decide whether the long
+   `#view-all` emoji grid needs a cap (open question in `UI_SPEC.md`).
+7. Review the diff, bump the version in `index.html` and `CHANGELOG.md`, then
+   commit and push (`recovered-ui` holds the 0.3.0 UI; `origin/main` is at
+   0.1.0 until it is merged).
 
-## Files touched so far (uncommitted)
+## Files touched so far
 
-`.gitignore`, `app.js`, `scrape_x_account.py`, `convert_x_archive.py` (new),
-`data/tweets.json` (new, placeholder sample data).
+`.gitignore`, `scrape_x_account.py`, `convert_x_archive.py` (new),
+`data/tweets.json` (new, placeholder sample data) — on `main` at 0.1.0.
+
+On `recovered-ui` (0.2.0–0.3.0): `index.html`, `css/styles.css`, `app.js`
+(rewritten), `data/tags.json`, `data/recovered-sample.json`, `assets/emoji/`,
+`assets/fonts/`, `scripts/vendor_emoji.js`, `ATTRIBUTION.md`,
+`CHANGELOG.md`, `UI_SPEC.md`.
