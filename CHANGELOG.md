@@ -4,6 +4,48 @@ Versions follow [semver](https://semver.org/) while the project is `0.x`: a mino
 new UI or behavior, a patch bump for fixes. The current version is shown in the page footer
 (`<span id="version">` in `index.html`), and each release gets a git tag (`vX.Y.Z`).
 
+## 0.4.3 — 2026-11-19
+
+### Changed
+- Emoji card is a fixed 375px tall, showing 6 across and 7 down. More emoji scroll inside the
+  card.
+
+## 0.4.2 — 2026-11-19
+
+### Fixed
+- Emoji cards are all the same size. Emoji with no Twemoji image fell back to the system font at
+  a different size; `assets/emoji/` now covers every emoji in the data.
+
+### Changed
+- All tweets come from `data/tweets.json`. `data/recovered-sample.json` and
+  `data/parked-tweets.json` are removed; their tweets are merged in.
+
+## 0.4.1 — 2026-11-19
+
+### Changed
+- Emoji card images are 32px (were 42px).
+- Four tweets without dates are parked in `data/parked-tweets.json`, out of the page.
+- Duplicate tweets removed from `data/recovered-sample.json`; the parsed tweets from the account
+  are kept.
+
+## 0.4.0 — 2026-11-19
+
+### Added
+- Each tweet is prefixed with its date in light text, as `mm/dd/yy` (UTC). Tweets without a
+  date show no prefix.
+
+## 0.3.1 — 2026-11-19
+
+Data and tooling only; no change to the page's layout or behavior.
+
+### Added
+- `scripts/clean_tweets.py`: cleans and validates tweet data before it goes in `data/`. It
+  normalizes whitespace, hashtags and timestamps, and rejects malformed input.
+- 22 tweets parsed from the account's posts into `data/recovered-sample.json`.
+
+### Changed
+- Removed an `@anildash` mention from a sample tweet in `data/recovered-sample.json`.
+
 ## 0.3.0 — 2026-11-18
 
 Interaction and layout refinements on the recovered UI; adds the UI spec.

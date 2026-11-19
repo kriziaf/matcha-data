@@ -17,13 +17,24 @@ const tweetPanel = document.getElementById('tweets');
 
 /* ---------- Data ---------- */
 
-// Raw tweet ({ text, entities.hashtags[].text }) -> { tags, emoji, text }.
+// ISO timestamp -> "mm/dd/yy" in UTC (so the day matches the stored date in every time zone), or null.
+function formatDate(iso) {
+  const d = iso ? new Date(iso) : null;
+  if (!d || Number.isNaN(d.getTime())) return null;
+  const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(d.getUTCDate()).padStart(2, '0');
+  const yy = String(d.getUTCFullYear() % 100).padStart(2, '0');
+  return `${mm}/${dd}/${yy}`;
+}
+
+// Raw tweet ({ text, created_at, entities.hashtags[].text }) -> { tags, emoji, text, date }.
 function normalizeTweet(raw) {
   const hashtags = raw.entities?.hashtags ?? [];
   return {
     tags: [...new Set(hashtags.map((h) => h.text.toLowerCase()))],
     emoji: (raw.text.match(EMOJI_RE) ?? []).join(''),
     text: raw.text,
+    date: formatDate(raw.created_at),
   };
 }
 
@@ -114,6 +125,12 @@ let view = { hits: [], selected: null };
 
 function tweetParagraph(tweet) {
   const p = document.createElement('p');
+  if (tweet.date) {
+    const date = document.createElement('span');
+    date.className = 'tweet-date';
+    date.textContent = `${tweet.date} `;
+    p.append(date);
+  }
   p.append(linkify(tweet.text));
   return p;
 }
