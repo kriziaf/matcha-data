@@ -17,7 +17,6 @@
 :root {
   --font: "Corben", Georgia, serif;
   --ink: #111;
-  --purple: #4b0f8f;
   --panel: #ececec;
   --border: #ddd;
   --muted: #666;
@@ -49,7 +48,7 @@ h1 {
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: var(--purple);
+  color: var(--ink);
 }
 
 /* Layout: tag column + content */
