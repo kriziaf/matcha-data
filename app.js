@@ -1,34 +1,18 @@
 $('document').ready(
   function() {
     $.ajax({
-      //SERVER LINK GOES HERE 104...
-      url:"http://localhost:3000/twitter",
-      //data:{},
-      success: function(data) {
-      console.log('hi');
-
-      // //DISPLAY STRING
-      //   $('#result').html('<p>' + data + '</p>')
-
-      //PARSE JSON STRING
-        var obj = jQuery.parseJSON(data);
+      url: "data/tweets.json",
+      dataType: "json",
+      success: function(obj) {
           console.log(obj);
         for (var i=0;i<obj.length;i++){
           let emoji = printEmojis(obj[i].text);
           if(emoji != null){
             let category = obj[i].entities.hashtags[0].text;
-            $('#result').append('<p class="'+category+' tweets">' + obj[i].text + '</p>');
-
-        for (var i=0;i<10;i++){
-            $('#result').append('<p>' + obj[i].text + '</p>');
-            //let tweet = obj[i].text
-            //console.log(tweet);
-
-            //on click of aTag, filter emojis containing the hashtag
-
-            // console.log(obj[1].text);
-            // let aTag = $("<a></a>").append('<a>#' + obj[i].entities.hashtags[0].text + "<a>");
-            // $('#hashtag').append(aTag);
+            let tweetId = 'tweet-' + i;
+            $('#result').append(
+              $('<p class="'+category+' tweets" id="'+tweetId+'">' + obj[i].text + '</p>').hide()
+            );
 
             let aTag = $('<a>#' + category + '<a>');
             aTag.click(() => {
@@ -36,17 +20,14 @@ $('document').ready(
             })
             $('#hashtag').append(aTag);
 
-            //console.log(tweet);
-            //hover this emoji, show obj[i].text
-            //else hide!!
-            // let emoji = printEmojis(obj[i].text);
-            $('#emoji').append('<span class="'+category+' emoji">'+emoji.join('')+'</span>');
+            let emojiSpan = $('<span class="'+category+' emoji" data-target="'+tweetId+'">'+emoji.join('')+'</span>');
+            emojiSpan.hover(
+              function(){ $('#'+$(this).data('target')).show(); },
+              function(){ $('#'+$(this).data('target')).hide(); }
+            );
+            $('#emoji').append(emojiSpan);
           }
-
-
         }
-
-
       },
       error: function(err) {
         console.log(err);

@@ -1,0 +1,176 @@
+[
+  {
+    "id": "1",
+    "text": "Loving this iced #matcha latte today! 🍵 #greentea",
+    "created_at": "2026-01-01T12:00:00.000Z",
+    "url": "https://x.com/matchadata/status/1",
+    "entities": {
+      "hashtags": [
+        {
+          "text": "matcha",
+          "indices": [
+            17,
+            24
+          ]
+        },
+        {
+          "text": "greentea",
+          "indices": [
+            40,
+            49
+          ]
+        }
+      ]
+    },
+    "likes": 42,
+    "reposts": 3,
+    "replies": 1,
+    "quotes": 0,
+    "views": null
+  },
+  {
+    "id": "2",
+    "text": "Morning #ceremony prep, whisking until frothy 🍃🫖 #matcha",
+    "created_at": "2026-01-02T09:30:00.000Z",
+    "url": "https://x.com/matchadata/status/2",
+    "entities": {
+      "hashtags": [
+        {
+          "text": "ceremony",
+          "indices": [
+            8,
+            17
+          ]
+        },
+        {
+          "text": "matcha",
+          "indices": [
+            49,
+            56
+          ]
+        }
+      ]
+    },
+    "likes": 18,
+    "reposts": 1,
+    "replies": 0,
+    "quotes": 0,
+    "views": null
+  },
+  {
+    "id": "3",
+    "text": "New seasonal #latte drop: strawberry matcha ✨🧋 #cafevibes",
+    "created_at": "2026-01-03T15:10:00.000Z",
+    "url": "https://x.com/matchadata/status/3",
+    "entities": {
+      "hashtags": [
+        {
+          "text": "latte",
+          "indices": [
+            13,
+            19
+          ]
+        },
+        {
+          "text": "cafevibes",
+          "indices": [
+            47,
+            57
+          ]
+        }
+      ]
+    },
+    "likes": 120,
+    "reposts": 25,
+    "replies": 8,
+    "quotes": 2,
+    "views": null
+  },
+  {
+    "id": "4",
+    "text": "Daily #wellness ritual: matcha + journaling 🙏🌱 #selfcare",
+    "created_at": "2026-01-04T08:00:00.000Z",
+    "url": "https://x.com/matchadata/status/4",
+    "entities": {
+      "hashtags": [
+        {
+          "text": "wellness",
+          "indices": [
+            6,
+            15
+          ]
+        },
+        {
+          "text": "selfcare",
+          "indices": [
+            47,
+            56
+          ]
+        }
+      ]
+    },
+    "likes": 64,
+    "reposts": 6,
+    "replies": 3,
+    "quotes": 0,
+    "views": null
+  },
+  {
+    "id": "5",
+    "text": "Comparing ceremonial vs culinary grade #matcha ☕️🍵 #teatalk",
+    "created_at": "2026-01-05T11:45:00.000Z",
+    "url": "https://x.com/matchadata/status/5",
+    "entities": {
+      "hashtags": [
+        {
+          "text": "matcha",
+          "indices": [
+            39,
+            46
+          ]
+        },
+        {
+          "text": "teatalk",
+          "indices": [
+            51,
+            59
+          ]
+        }
+      ]
+    },
+    "likes": 33,
+    "reposts": 4,
+    "replies": 2,
+    "quotes": 1,
+    "views": null
+  },
+  {
+    "id": "6",
+    "text": "Sunset matcha affogato, no words needed 🌅🍵 #dessert #matcha",
+    "created_at": "2026-01-06T17:20:00.000Z",
+    "url": "https://x.com/matchadata/status/6",
+    "entities": {
+      "hashtags": [
+        {
+          "text": "dessert",
+          "indices": [
+            43,
+            51
+          ]
+        },
+        {
+          "text": "matcha",
+          "indices": [
+            52,
+            59
+          ]
+        }
+      ]
+    },
+    "likes": 210,
+    "reposts": 40,
+    "replies": 15,
+    "quotes": 5,
+    "views": null
+  }
+]

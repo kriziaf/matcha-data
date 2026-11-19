@@ -20,18 +20,22 @@ Usage
   # optional: reuse a logged-in session saved with `--save-session state.json`
   python scrape_x_account.py browser matchadata --session state.json
 
-Outputs <out>.jsonl and <out>.csv
+Outputs <out>.jsonl, <out>.csv, and a web-ready <web-out> JSON file
+(default data/tweets.json) shaped for the Matcha Data site's app.js,
+i.e. each post has .text and .entities.hashtags[].text.
 """
 import argparse
 import csv
 import json
 import os
+import re
 import sys
 import time
 
 import requests
 
 API = "https://api.twitter.com/2"
+HASHTAG_RE = re.compile(r"#(\w+)")
 
 
 # ---------------------------------------------------------------- API mode
@@ -156,6 +160,48 @@ def scrape_browser(username, max_posts, session, save_session, headed):
     return posts[:max_posts]
 
 
+# ------------------------------------------------------------- web schema
+def extract_hashtags(text):
+    """Derive v1.1-style entities.hashtags (text + indices) from post text.
+
+    app.js (and the old Twitter v1.1 API it was written against) expects
+    entities.hashtags[].text, which v2's entities.hashtags[].tag doesn't
+    provide and browser-mode posts don't have at all, so we compute it
+    directly from the text for both scrape modes.
+    """
+    return [
+        {"text": m.group(1), "indices": [m.start(), m.end()]}
+        for m in HASHTAG_RE.finditer(text)
+    ]
+
+
+def to_web_schema(posts):
+    web_posts = []
+    for p in posts:
+        web_posts.append(
+            {
+                "id": p.get("id"),
+                "text": p.get("text", ""),
+                "created_at": p.get("created_at"),
+                "url": p.get("url"),
+                "entities": {"hashtags": extract_hashtags(p.get("text", ""))},
+                "likes": p.get("likes"),
+                "reposts": p.get("reposts"),
+                "replies": p.get("replies"),
+                "quotes": p.get("quotes"),
+                "views": p.get("views"),
+            }
+        )
+    return web_posts
+
+
+def write_web_json(posts, path):
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(to_web_schema(posts), f, ensure_ascii=False, indent=2)
+    print(f"Wrote {len(posts)} posts to {path}", file=sys.stderr)
+
+
 # ------------------------------------------------------------------ output
 def write_outputs(posts, out):
     with open(f"{out}.jsonl", "w", encoding="utf-8") as f:
@@ -180,6 +226,11 @@ def main():
     ap.add_argument("--session", help="Playwright storage_state JSON (browser mode)")
     ap.add_argument("--save-session", help="Pause to log in and save session here (browser mode)")
     ap.add_argument("--headed", action="store_true")
+    ap.add_argument(
+        "--web-out",
+        default="data/tweets.json",
+        help="Path for the site-ready JSON (matches app.js's expected schema). Pass '' to skip.",
+    )
     a = ap.parse_args()
 
     out = a.out or a.username
@@ -191,6 +242,8 @@ def main():
     else:
         posts = scrape_browser(a.username, a.max_posts, a.session, a.save_session, a.headed or bool(a.save_session))
     write_outputs(posts, out)
+    if a.web_out:
+        write_web_json(posts, a.web_out)
 
 
 if __name__ == "__main__":

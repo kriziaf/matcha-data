@@ -1,3 +1,11 @@
 .DS_Store
 *.pyc
 __pycache__/
+
+# raw scraper dumps (data/tweets.json is the site's actual data source)
+*.jsonl
+*.csv
+
+# Playwright saved login session (browser cookies) -- never commit
+*.session.json
+state.json
