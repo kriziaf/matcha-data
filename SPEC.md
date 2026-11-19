@@ -107,6 +107,6 @@ ever needed for reference.
 `.gitignore`, `scrape_x_account.py`, `convert_x_archive.py`, `index.html`,
 `css/styles.css`, `app.js` (rewritten), `data/tweets.json` (placeholder
 sample data — **needs the real archive**), `data/tags.json`,
-`data/recovered-sample.json`, `assets/emoji/`, `assets/fonts/`,
+`assets/emoji/`, `assets/fonts/`,
 `scripts/vendor_emoji.js`, `ATTRIBUTION.md`, `CHANGELOG.md`, `UI_SPEC.md` —
 all on `main`.

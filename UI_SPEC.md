@@ -20,7 +20,6 @@ two small data-dependent steps, in "Mapping the real data").
 | `assets/emoji/*.svg` | Twemoji images for the emoji used in the data |
 | `assets/fonts/*.woff2` | Corben 400 and 700 |
 | `scripts/vendor_emoji.js` | Copies the Twemoji SVGs the data uses into `assets/emoji/` |
-| `data/recovered-sample.json` | Test fixture: recovered tweets in the tweet schema |
 | `ATTRIBUTION.md` | Twemoji (CC-BY 4.0) and Corben (OFL) credits |
 
 ## Layout
@@ -140,7 +139,7 @@ When the X export is available:
 
 Copy from `recovered-ui`: `index.html`, `css/styles.css`, `app.js`, `assets/`, `scripts/`,
 `data/tags.json`, `ATTRIBUTION.md`, `CHANGELOG.md`, `UI_SPEC.md`. Keep `main`'s `data/tweets.json`
-pipeline files as they are. Keep `data/recovered-sample.json` only if you want the test fixture.
+pipeline files as they are. All tweets live in `data/tweets.json`.
 
 ## Checks
 
