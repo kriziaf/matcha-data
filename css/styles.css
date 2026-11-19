@@ -1,121 +1,143 @@
-body {
-	width: 1200px;
-	margin: auto;
-	font-size: 20px;
-	font-family: "Courier New", Courier, monospace;
+:root {
+  --ink: #111;
+  --purple: #4b0f8f;
+  --panel: #ececec;
+  --border: #ddd;
+  --muted: #666;
 }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* Header */
 
 header {
-	width: 998px;
-
+  margin: 0 4px;
+  padding: 8px 4px 0;
+  border-bottom: 3px solid var(--ink);
 }
 
-h1, h2 {
-  font-weight: 800;
-  text-transform: uppercase;
-  border-bottom: 4px solid black;
+h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--purple);
 }
 
-h1 a {
-  font-size: 40px;
-	text-decoration: none;
+/* Layout: tag column + content */
+
+.layout {
+  display: grid;
+  grid-template-columns: 86px 1fr;
+  gap: 4px;
+  align-items: start;
+  padding: 10px 4px;
 }
 
-h2 {
-  font-size: 26px;
-  padding: 13px 0;
-  color: #fffebb;
-  border-bottom-color: #fffebb;
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 640px;
+  margin-left: 10px;
 }
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 20px;
+/* Hashtag list */
+
+nav {
+  position: sticky;
+  top: 8px;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  line-height: 1.28;
+  scrollbar-width: none;
 }
 
-li {
-  /* float:left; */
-  font-size: 20px;
-  /* width: 50%;
-  height: 100px; */
-  /* outline: 2px solid #222222; */
+nav::-webkit-scrollbar {
+  display: none;
+}
+
+nav button {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
   text-align: left;
-  line-height: 200%;
-  color: black;
-
+  cursor: pointer;
 }
 
-section {
-
-	background: #eee;
-	border: 1px #ccc solid;
-	width: 780px;
-	margin: 10px;
-	float: left;
-
+nav button:hover,
+nav button:focus-visible,
+nav button.active {
+  outline: none;
+  background: var(--ink);
+  color: #fff;
 }
 
-section #result {
-	margin: 20px;
-	font-family: "Courier New", Courier, monospace;
+/* Panels */
+
+.emoji-panel,
+.tweets {
+  background: var(--panel);
+  border: 1px solid var(--border);
 }
 
-section #emoji {
-	font-size: 75px;
-	margin: 20px;
+.emoji-panel {
+  min-height: 90px;
+  padding: 10px 14px;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: 2px;
+  word-break: break-all;
 }
 
-aside {
-	display: flex;
-  flex-flow: column wrap;
-	background: #eee;
-	border: 1px #ccc solid;
-	width: 250px;
-	/* height: 300px; */
-	float: left;
-	font-size: 40px;
-	margin: 20px;
-	font-family: "Courier New", Courier, monospace;
-}
-section #result {
-	margin: 20px;
+.emoji-panel .none {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  margin: 2px 3px;
+  border: 3px solid var(--ink);
+  vertical-align: middle;
 }
 
-
-section #emoji {
-	font-size: 75px;
-	margin: 20px;
+.tweets {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 60px;
+  padding: 14px 16px;
 }
 
-footer {
-	background: #eee;
-	border: 1px #ccc solid;
-	width: 800px;
-	height: 100px;
-	margin: 10px;
-	float: left;
+.tweets p {
+  margin: 0;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-aside #hashtag {
-	font-size: 40px;
-	margin: 20px;
-
+.tweets a {
+  color: inherit;
+  text-decoration: underline;
 }
 
-aside  {
-	display: flex;
-	flex-flow: column wrap;
-	float: left;
+.hint {
+  color: var(--muted);
 }
 
-footer {
-	background: #eee;
-	border: 1px #ccc solid;
-	width: 800px;
-	height: 100px;
-	margin: 10px;
-	float: left;
-
-
+@media (max-width: 520px) {
+  .emoji-panel {
+    font-size: 24px;
+  }
 }

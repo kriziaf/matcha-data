@@ -1,66 +1,131 @@
-$('document').ready(
-  function() {
-    $.ajax({
-      url: "data/tweets.json",
-      dataType: "json",
-      success: function(obj) {
-          console.log(obj);
-        for (var i=0;i<obj.length;i++){
-          let emoji = printEmojis(obj[i].text);
-          if(emoji != null){
-            let category = obj[i].entities.hashtags[0].text;
-            let tweetId = 'tweet-' + i;
-            $('#result').append(
-              $('<p class="'+category+' tweets" id="'+tweetId+'">' + obj[i].text + '</p>').hide()
-            );
+'use strict';
 
-            let aTag = $('<a>#' + category + '<a>');
-            aTag.click(() => {
-              filterContent(category);
-            })
-            $('#hashtag').append(aTag);
+const DATA_URL = 'data/tweets.json';
+const DEFAULT_TAG = 'reading';
 
-            let emojiSpan = $('<span class="'+category+' emoji" data-target="'+tweetId+'">'+emoji.join('')+'</span>');
-            emojiSpan.hover(
-              function(){ $('#'+$(this).data('target')).show(); },
-              function(){ $('#'+$(this).data('target')).hide(); }
-            );
-            $('#emoji').append(emojiSpan);
-          }
-        }
-      },
-      error: function(err) {
-        console.log(err);
-      }
+// An emoji, optional skin tone, then any variation selector / ZWJ-joined parts.
+const EMOJI_RE =
+  /\p{Extended_Pictographic}\p{Emoji_Modifier}?(?:️|‍\p{Extended_Pictographic}\p{Emoji_Modifier}?️?)*/gu;
+const URL_RE = /(https?:\/\/\S+)/g;
+
+const tagNav = document.getElementById('tags');
+const emojiPanel = document.getElementById('emoji');
+const tweetPanel = document.getElementById('tweets');
+
+/* ---------- Data ---------- */
+
+// Raw tweet ({ text, entities.hashtags[].text }) -> { tags, emoji, text }.
+function normalizeTweet(raw) {
+  const hashtags = raw.entities?.hashtags ?? [];
+  return {
+    tags: [...new Set(hashtags.map((h) => h.text.toLowerCase()))],
+    emoji: (raw.text.match(EMOJI_RE) ?? []).join(''),
+    text: raw.text,
+  };
+}
+
+// Unique tags, in order of first appearance.
+function collectTags(tweets) {
+  return [...new Set(tweets.flatMap((t) => t.tags))];
+}
+
+async function loadTweets() {
+  const response = await fetch(DATA_URL);
+  if (!response.ok) throw new Error(`${DATA_URL}: HTTP ${response.status}`);
+  return (await response.json()).map(normalizeTweet);
+}
+
+/* ---------- Rendering ---------- */
+
+// Plain text with bare URLs turned into links (built with DOM nodes, so no escaping needed).
+function linkify(text) {
+  const fragment = document.createDocumentFragment();
+  text.split(URL_RE).forEach((part, i) => {
+    if (i % 2 === 0) {
+      fragment.append(part);
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = part;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = part;
+    fragment.append(a);
+  });
+  return fragment;
+}
+
+function renderTagList(tags) {
+  tagNav.replaceChildren(
+    ...tags.map((tag) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.tag = tag;
+      button.textContent = `#${tag}`;
+      return button;
     })
+  );
+}
+
+function renderTag(tweets, tag) {
+  tagNav.querySelectorAll('.active').forEach((b) => b.classList.remove('active'));
+  tagNav.querySelector(`[data-tag="${CSS.escape(tag)}"]`)?.classList.add('active');
+
+  const hits = tweets.filter((t) => t.tags.includes(tag));
+
+  if (!hits.length) {
+    const none = document.createElement('span');
+    none.className = 'none';
+    emojiPanel.replaceChildren(none);
+    tweetPanel.replaceChildren(hint(`No tweets for #${tag} yet.`));
+    return;
   }
-)
 
-
-function filterContent(target){
-  $('.emoji').each(function(){
-    console.log(this);
-    console.log($(this).hasClass(target));
-    if(!$(this).hasClass(target)){
-      $(this).hide();
-    }else{
-      $(this).show();
-    }
-  })
-  $('.tweets').each(function(){
-    console.log(this);
-    console.log($(this).hasClass(target));
-    if(!$(this).hasClass(target)){
-      $(this).hide();
-    }else{
-      $(this).show();
-    }
-  })
-
+  emojiPanel.textContent = hits.map((t) => t.emoji).join('');
+  tweetPanel.replaceChildren(
+    ...hits.map((t) => {
+      const p = document.createElement('p');
+      p.append(linkify(t.text));
+      return p;
+    })
+  );
 }
 
-function printEmojis (twittertext) {
-  var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|[\ud83c[\ude50\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
-
-  return(twittertext.match(regex));
+function hint(message) {
+  const p = document.createElement('p');
+  p.className = 'hint';
+  p.textContent = message;
+  return p;
 }
+
+/* ---------- Init ---------- */
+
+async function init() {
+  let tweets;
+  try {
+    tweets = await loadTweets();
+  } catch (error) {
+    console.error(error);
+    tweetPanel.replaceChildren(hint('Could not load tweets.'));
+    return;
+  }
+
+  const tags = collectTags(tweets);
+  if (!tags.length) {
+    tweetPanel.replaceChildren(hint('No hashtags found in tweets.'));
+    return;
+  }
+  renderTagList(tags);
+
+  const select = (event) => {
+    const button = event.target.closest('button[data-tag]');
+    if (button) renderTag(tweets, button.dataset.tag);
+  };
+  tagNav.addEventListener('mouseover', select);
+  tagNav.addEventListener('focusin', select);
+  tagNav.addEventListener('click', select);
+
+  renderTag(tweets, tags.includes(DEFAULT_TAG) ? DEFAULT_TAG : tags[0]);
+}
+
+init();
