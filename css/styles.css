@@ -175,6 +175,27 @@ nav button.active {
   line-height: 1.15;
 }
 
+.emoji-btn {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.emoji-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* With an emoji picked, fade the emoji that belong to other tweets. */
+.emoji-panel.has-selection .emoji-btn:not(.selected) {
+  opacity: 0.3;
+}
+
 .emoji-panel .emoji {
   width: 42px;
   height: 42px;

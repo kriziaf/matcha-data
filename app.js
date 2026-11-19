@@ -109,11 +109,59 @@ function renderTagList(tags) {
   );
 }
 
+// Tweets shown for the current tag, and the one picked by clicking an emoji (if any).
+let view = { hits: [], selected: null };
+
+function tweetParagraph(tweet) {
+  const p = document.createElement('p');
+  p.append(linkify(tweet.text));
+  return p;
+}
+
+// One button per emoji; clicking it shows only the tweet that emoji came from.
+function emojiButton(emoji, tweet) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'emoji-btn';
+  button.setAttribute('aria-pressed', 'false');
+  button.append(emojiImage(emoji));
+  button.tweet = tweet;
+  return button;
+}
+
+function renderEmoji() {
+  emojiPanel.replaceChildren(
+    ...view.hits.flatMap((t) => (t.emoji.match(EMOJI_RE) ?? []).map((e) => emojiButton(e, t)))
+  );
+}
+
+function renderTweets() {
+  const shown = view.selected ? [view.selected] : view.hits;
+  tweetPanel.replaceChildren(...shown.map(tweetParagraph));
+
+  emojiPanel.classList.toggle('has-selection', Boolean(view.selected));
+  emojiPanel.querySelectorAll('.emoji-btn').forEach((button) => {
+    const isSelected = button.tweet === view.selected;
+    button.classList.toggle('selected', isSelected);
+    button.setAttribute('aria-pressed', String(isSelected));
+  });
+}
+
+// Click an emoji to show just its tweet; click it again to show all the tag's tweets.
+function toggleEmoji(event) {
+  const button = event.target.closest('.emoji-btn');
+  if (!button) return;
+  view.selected = view.selected === button.tweet ? null : button.tweet;
+  renderTweets();
+}
+
 function renderTag(tweets, tag) {
   tagNav.querySelectorAll('.active').forEach((b) => b.classList.remove('active'));
   tagNav.querySelector(`[data-tag="${CSS.escape(tag)}"]`)?.classList.add('active');
 
   const hits = tag === ALL_TAG ? tweets : tweets.filter((t) => t.tags.includes(tag));
+  view = { hits, selected: null };
+  emojiPanel.classList.remove('has-selection');
 
   if (!hits.length) {
     const none = document.createElement('span');
@@ -123,14 +171,8 @@ function renderTag(tweets, tag) {
     return;
   }
 
-  emojiPanel.replaceChildren(...hits.flatMap((t) => t.emoji.match(EMOJI_RE) ?? []).map(emojiImage));
-  tweetPanel.replaceChildren(
-    ...hits.map((t) => {
-      const p = document.createElement('p');
-      p.append(linkify(t.text));
-      return p;
-    })
-  );
+  renderEmoji();
+  renderTweets();
 }
 
 function hint(message) {
@@ -165,6 +207,7 @@ async function init() {
   tagNav.addEventListener('mouseover', (event) => canHover.matches && select(event));
   tagNav.addEventListener('focusin', select);
   tagNav.addEventListener('click', select);
+  emojiPanel.addEventListener('click', toggleEmoji);
 
   renderTag(tweets, tags.includes(DEFAULT_TAG) ? DEFAULT_TAG : tags[1] ?? ALL_TAG);
 }
