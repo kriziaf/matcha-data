@@ -4,6 +4,12 @@ Versions follow [semver](https://semver.org/) while the project is `0.x`: a mino
 new UI or behavior, a patch bump for fixes. The current version is shown in the page footer
 (`<span id="version">` in `index.html`), and each release gets a git tag (`vX.Y.Z`).
 
+## 0.4.3 — 2026-11-19
+
+### Changed
+- Emoji card is a fixed 375px tall, showing 6 across and 7 down. More emoji scroll inside the
+  card.
+
 ## 0.4.2 — 2026-11-19
 
 ### Fixed
