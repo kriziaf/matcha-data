@@ -1,6 +1,7 @@
 'use strict';
 
 const DATA_URL = 'data/tweets.json';
+const TAG_ORDER_URL = 'data/tags.json'; // optional: preferred sidebar order
 const DEFAULT_TAG = 'reading';
 const ALL_TAG = 'all'; // pseudo-tag: shows every tweet, unfiltered
 
@@ -34,6 +35,24 @@ async function loadTweets() {
   const response = await fetch(DATA_URL);
   if (!response.ok) throw new Error(`${DATA_URL}: HTTP ${response.status}`);
   return (await response.json()).map(normalizeTweet);
+}
+
+// Preferred sidebar order. Optional: a missing or invalid file just means no preset order.
+async function loadTagOrder() {
+  try {
+    const response = await fetch(TAG_ORDER_URL);
+    if (!response.ok) return [];
+    return (await response.json()).map((tag) => String(tag).toLowerCase());
+  } catch {
+    return [];
+  }
+}
+
+// Preset tags first (even with no tweets yet), then any other tags found in the data.
+function buildTagList(tagOrder, tweets) {
+  const tags = new Set([...tagOrder, ...collectTags(tweets)]);
+  tags.delete(ALL_TAG); // a real "#all" hashtag would collide with the view-all entry
+  return [ALL_TAG, ...tags];
 }
 
 /* ---------- Rendering ---------- */
@@ -103,17 +122,17 @@ function hint(message) {
 
 async function init() {
   let tweets;
+  let tagOrder;
   try {
-    tweets = await loadTweets();
+    [tweets, tagOrder] = await Promise.all([loadTweets(), loadTagOrder()]);
   } catch (error) {
     console.error(error);
     tweetPanel.replaceChildren(hint('Could not load tweets.'));
     return;
   }
 
-  // A real "#all" hashtag would collide with the view-all entry, which already includes it.
-  const tags = collectTags(tweets).filter((tag) => tag !== ALL_TAG);
-  renderTagList([ALL_TAG, ...tags]);
+  const tags = buildTagList(tagOrder, tweets);
+  renderTagList(tags);
 
   const select = (event) => {
     const button = event.target.closest('button[data-tag]');
@@ -123,7 +142,7 @@ async function init() {
   tagNav.addEventListener('focusin', select);
   tagNav.addEventListener('click', select);
 
-  renderTag(tweets, tags.includes(DEFAULT_TAG) ? DEFAULT_TAG : tags[0] ?? ALL_TAG);
+  renderTag(tweets, tags.includes(DEFAULT_TAG) ? DEFAULT_TAG : tags[1] ?? ALL_TAG);
 }
 
 init();
