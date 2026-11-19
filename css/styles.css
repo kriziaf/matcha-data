@@ -18,6 +18,7 @@
   --font: "Corben", Georgia, serif;
   --ink: #111;
   --panel: #ececec;
+  --stroke: #949494;
   --border: #ddd;
   --muted: #666;
 }
@@ -115,13 +116,14 @@ nav button.active {
 
 .emoji-panel,
 .tweets {
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: none;
+  border: 1px solid var(--stroke);
+  border-radius: 24px;
 }
 
 .emoji-panel {
   min-height: 90px;
-  padding: 10px 14px;
+  padding: 16px 22px;
   font-size: 30px;
   line-height: 1.15;
   letter-spacing: 2px;
@@ -149,7 +151,7 @@ nav button.active {
   flex-direction: column;
   gap: 14px;
   min-height: 60px;
-  padding: 14px 16px;
+  padding: 18px 24px;
 }
 
 .tweets p {
