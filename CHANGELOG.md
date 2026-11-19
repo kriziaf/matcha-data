@@ -4,6 +4,18 @@ Versions follow [semver](https://semver.org/) while the project is `0.x`: a mino
 new UI or behavior, a patch bump for fixes. The current version is shown in the page footer
 (`<span id="version">` in `index.html`), and each release gets a git tag (`vX.Y.Z`).
 
+## 0.3.1 — 2026-11-19
+
+Data and tooling only; no change to the page's layout or behavior.
+
+### Added
+- `scripts/clean_tweets.py`: cleans and validates tweet data before it goes in `data/`. It
+  normalizes whitespace, hashtags and timestamps, and rejects malformed input.
+- 22 tweets parsed from the account's posts into `data/recovered-sample.json`.
+
+### Changed
+- Removed an `@anildash` mention from a sample tweet in `data/recovered-sample.json`.
+
 ## 0.3.0 — 2026-11-18
 
 Interaction and layout refinements on the recovered UI; adds the UI spec.
