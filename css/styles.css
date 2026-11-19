@@ -75,6 +75,7 @@ nav button {
   font: inherit;
   color: inherit;
   text-align: left;
+  overflow-wrap: anywhere;
   cursor: pointer;
 }
 
