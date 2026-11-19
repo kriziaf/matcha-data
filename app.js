@@ -2,6 +2,7 @@
 
 const DATA_URL = 'data/tweets.json';
 const DEFAULT_TAG = 'reading';
+const ALL_TAG = 'all'; // pseudo-tag: shows every tweet, unfiltered
 
 // An emoji, optional skin tone, then any variation selector / ZWJ-joined parts.
 const EMOJI_RE =
@@ -71,7 +72,7 @@ function renderTag(tweets, tag) {
   tagNav.querySelectorAll('.active').forEach((b) => b.classList.remove('active'));
   tagNav.querySelector(`[data-tag="${CSS.escape(tag)}"]`)?.classList.add('active');
 
-  const hits = tweets.filter((t) => t.tags.includes(tag));
+  const hits = tag === ALL_TAG ? tweets : tweets.filter((t) => t.tags.includes(tag));
 
   if (!hits.length) {
     const none = document.createElement('span');
@@ -110,12 +111,9 @@ async function init() {
     return;
   }
 
-  const tags = collectTags(tweets);
-  if (!tags.length) {
-    tweetPanel.replaceChildren(hint('No hashtags found in tweets.'));
-    return;
-  }
-  renderTagList(tags);
+  // A real "#all" hashtag would collide with the view-all entry, which already includes it.
+  const tags = collectTags(tweets).filter((tag) => tag !== ALL_TAG);
+  renderTagList([ALL_TAG, ...tags]);
 
   const select = (event) => {
     const button = event.target.closest('button[data-tag]');
@@ -125,7 +123,7 @@ async function init() {
   tagNav.addEventListener('focusin', select);
   tagNav.addEventListener('click', select);
 
-  renderTag(tweets, tags.includes(DEFAULT_TAG) ? DEFAULT_TAG : tags[0]);
+  renderTag(tweets, tags.includes(DEFAULT_TAG) ? DEFAULT_TAG : tags[0] ?? ALL_TAG);
 }
 
 init();
