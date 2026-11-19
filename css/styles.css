@@ -1,4 +1,21 @@
+@font-face {
+  font-family: "Corben";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/corben-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Corben";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/corben-latin-700-normal.woff2") format("woff2");
+}
+
 :root {
+  --font: "Corben", Georgia, serif;
   --ink: #111;
   --purple: #4b0f8f;
   --panel: #ececec;
@@ -12,8 +29,9 @@
 
 body {
   margin: 0;
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font);
   font-size: 11px;
+  -webkit-tap-highlight-color: transparent;
   color: var(--ink);
   background: #fff;
 }
@@ -79,12 +97,19 @@ nav button {
   cursor: pointer;
 }
 
-nav button:hover,
 nav button:focus-visible,
 nav button.active {
   outline: none;
   background: var(--ink);
   color: #fff;
+}
+
+/* Hover only where a pointer can hover, so a tapped tag doesn't stay highlighted on touch screens. */
+@media (hover: hover) {
+  nav button:hover {
+    background: var(--ink);
+    color: #fff;
+  }
 }
 
 /* Panels */
@@ -144,7 +169,45 @@ nav button.active {
   color: var(--muted);
 }
 
-@media (max-width: 520px) {
+/* Mobile: tags become a wrapped row above the panels; tapping a tag selects it. */
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* One swipeable row, so the results stay on screen under the tags. */
+  nav {
+    position: static;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    gap: 6px;
+    padding-bottom: 2px;
+  }
+
+  nav button {
+    flex: none;
+    white-space: nowrap;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+  }
+
+  main {
+    max-width: none;
+    margin-left: 0;
+  }
+
   .emoji-panel {
     font-size: 24px;
   }

@@ -160,7 +160,9 @@ async function init() {
     const button = event.target.closest('button[data-tag]');
     if (button) renderTag(tweets, button.dataset.tag);
   };
-  tagNav.addEventListener('mouseover', select);
+  // Hover selects on devices that can hover; on touch screens a tap (click) selects.
+  const canHover = window.matchMedia('(hover: hover)');
+  tagNav.addEventListener('mouseover', (event) => canHover.matches && select(event));
   tagNav.addEventListener('focusin', select);
   tagNav.addEventListener('click', select);
 
