@@ -4,7 +4,7 @@ const DATA_URL = 'data/tweets.json';
 const EMOJI_DIR = 'assets/emoji/'; // Twemoji SVGs, see scripts/vendor_emoji.js
 const TAG_ORDER_URL = 'data/tags.json'; // optional: preferred sidebar order
 const DEFAULT_TAG = 'reading';
-const ALL_TAG = 'all'; // pseudo-tag: shows every tweet, unfiltered
+const ALL_TAG = 'view-all'; // pseudo-tag: shows every tweet, unfiltered
 
 // An emoji, optional skin tone, then any variation selector / ZWJ-joined parts.
 const EMOJI_RE =
@@ -52,7 +52,7 @@ async function loadTagOrder() {
 // Preset tags first (even with no tweets yet), then any other tags found in the data.
 function buildTagList(tagOrder, tweets) {
   const tags = new Set([...tagOrder, ...collectTags(tweets)]);
-  tags.delete(ALL_TAG); // a real "#all" hashtag would collide with the view-all entry
+  tags.delete(ALL_TAG); // keep the view-all entry unique
   return [ALL_TAG, ...tags];
 }
 
