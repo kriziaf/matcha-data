@@ -4,6 +4,16 @@ Versions follow [semver](https://semver.org/) while the project is `0.x`: a mino
 new UI or behavior, a patch bump for fixes. The current version is shown in the page footer
 (`<span id="version">` in `index.html`), and each release gets a git tag (`vX.Y.Z`).
 
+## 0.4.2 — 2026-11-19
+
+### Fixed
+- Emoji cards are all the same size. Emoji with no Twemoji image fell back to the system font at
+  a different size; `assets/emoji/` now covers every emoji in the data.
+
+### Changed
+- All tweets come from `data/tweets.json`. `data/recovered-sample.json` and
+  `data/parked-tweets.json` are removed; their tweets are merged in.
+
 ## 0.4.1 — 2026-11-19
 
 ### Changed
