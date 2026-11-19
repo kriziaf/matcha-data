@@ -4,6 +4,12 @@ Versions follow [semver](https://semver.org/) while the project is `0.x`: a mino
 new UI or behavior, a patch bump for fixes. The current version is shown in the page footer
 (`<span id="version">` in `index.html`), and each release gets a git tag (`vX.Y.Z`).
 
+## 0.4.0 — 2026-11-19
+
+### Added
+- Each tweet is prefixed with its date in light text, as `mm/dd/yy` (UTC). Tweets without a
+  date show no prefix.
+
 ## 0.3.1 — 2026-11-19
 
 Data and tooling only; no change to the page's layout or behavior.
