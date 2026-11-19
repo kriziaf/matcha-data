@@ -1,6 +1,7 @@
 'use strict';
 
 const DATA_URL = 'data/tweets.json';
+const EMOJI_DIR = 'assets/emoji/'; // Twemoji SVGs, see scripts/vendor_emoji.js
 const TAG_ORDER_URL = 'data/tags.json'; // optional: preferred sidebar order
 const DEFAULT_TAG = 'reading';
 const ALL_TAG = 'all'; // pseudo-tag: shows every tweet, unfiltered
@@ -55,6 +56,27 @@ function buildTagList(tagOrder, tweets) {
   return [ALL_TAG, ...tags];
 }
 
+/* ---------- Emoji images (Twemoji) ---------- */
+
+// Twemoji filenames: lowercase hex code points joined by "-", FE0F dropped unless the emoji has a ZWJ.
+// Keep in sync with scripts/vendor_emoji.js.
+function emojiFilename(emoji) {
+  const hasZwj = emoji.includes('\u200D');
+  const points = [...emoji].map((c) => c.codePointAt(0)).filter((cp) => hasZwj || cp !== 0xfe0f);
+  return points.map((cp) => cp.toString(16)).join('-') + '.svg';
+}
+
+// Twemoji <img> for one emoji; falls back to the plain emoji character if the file is missing.
+function emojiImage(emoji) {
+  const img = document.createElement('img');
+  img.className = 'emoji';
+  img.alt = emoji;
+  img.draggable = false;
+  img.src = EMOJI_DIR + emojiFilename(emoji);
+  img.addEventListener('error', () => img.replaceWith(emoji), { once: true });
+  return img;
+}
+
 /* ---------- Rendering ---------- */
 
 // Plain text with bare URLs turned into links (built with DOM nodes, so no escaping needed).
@@ -101,7 +123,7 @@ function renderTag(tweets, tag) {
     return;
   }
 
-  emojiPanel.textContent = hits.map((t) => t.emoji).join('');
+  emojiPanel.replaceChildren(...hits.flatMap((t) => t.emoji.match(EMOJI_RE) ?? []).map(emojiImage));
   tweetPanel.replaceChildren(
     ...hits.map((t) => {
       const p = document.createElement('p');

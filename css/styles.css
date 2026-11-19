@@ -104,6 +104,13 @@ nav button.active {
   word-break: break-all;
 }
 
+.emoji-panel .emoji {
+  width: 1em;
+  height: 1em;
+  margin: 0 1px;
+  vertical-align: -0.1em;
+}
+
 .emoji-panel .none {
   display: inline-block;
   width: 26px;
