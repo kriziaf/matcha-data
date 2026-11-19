@@ -211,3 +211,26 @@ nav button.active {
 .hint {
   color: var(--muted);
 }
+
+/* Footer */
+
+footer {
+  padding: 8px 4px 24px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+footer a:hover,
+footer a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Corben's digits look like letters (0 as O, 1 as l), so the version number uses a system font. */
+#version {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
