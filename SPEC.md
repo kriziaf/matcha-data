@@ -92,15 +92,21 @@ X typically takes a few hours (up to ~a day) and emails a download link.
    no 404s in `assets/emoji/`) at real data volume. Decide whether the long
    `#view-all` emoji grid needs a cap (open question in `UI_SPEC.md`).
 7. Review the diff, bump the version in `index.html` and `CHANGELOG.md`, then
-   commit and push (`recovered-ui` holds the 0.3.0 UI; `origin/main` is at
-   0.1.0 until it is merged).
+   commit and push to `main`.
+
+## Branches
+
+`main` is now the 0.3.0 UI described in this file and `UI_SPEC.md` — the
+`recovered-ui` branch was merged into `main` (a fast-forward, since it was
+a direct descendant) and then deleted as redundant. The earlier jQuery-based
+emoji-cloud UI (tagged `v0.1.0`) lives on in the `legacy-ui` branch if it's
+ever needed for reference.
 
 ## Files touched so far
 
-`.gitignore`, `scrape_x_account.py`, `convert_x_archive.py` (new),
-`data/tweets.json` (new, placeholder sample data) — on `main` at 0.1.0.
-
-On `recovered-ui` (0.2.0–0.3.0): `index.html`, `css/styles.css`, `app.js`
-(rewritten), `data/tags.json`, `data/recovered-sample.json`, `assets/emoji/`,
-`assets/fonts/`, `scripts/vendor_emoji.js`, `ATTRIBUTION.md`,
-`CHANGELOG.md`, `UI_SPEC.md`.
+`.gitignore`, `scrape_x_account.py`, `convert_x_archive.py`, `index.html`,
+`css/styles.css`, `app.js` (rewritten), `data/tweets.json` (placeholder
+sample data — **needs the real archive**), `data/tags.json`,
+`data/recovered-sample.json`, `assets/emoji/`, `assets/fonts/`,
+`scripts/vendor_emoji.js`, `ATTRIBUTION.md`, `CHANGELOG.md`, `UI_SPEC.md` —
+all on `main`.
