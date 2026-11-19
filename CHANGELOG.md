@@ -4,6 +4,14 @@ Versions follow [semver](https://semver.org/) while the project is `0.x`: a mino
 new UI or behavior, a patch bump for fixes. The current version is shown in the page footer
 (`<span id="version">` in `index.html`), and each release gets a git tag (`vX.Y.Z`).
 
+## 0.4.1 — 2026-11-19
+
+### Changed
+- Emoji card images are 32px (were 42px).
+- Four tweets without dates are parked in `data/parked-tweets.json`, out of the page.
+- Duplicate tweets removed from `data/recovered-sample.json`; the parsed tweets from the account
+  are kept.
+
 ## 0.4.0 — 2026-11-19
 
 ### Added
