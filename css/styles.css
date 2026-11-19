@@ -64,6 +64,22 @@ h1 a:focus-visible {
   text-decoration: underline;
 }
 
+.subtitle {
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.subtitle a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.subtitle .emoji {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+}
+
 /* Layout: tags above the cards, same on every screen size */
 
 .layout {
